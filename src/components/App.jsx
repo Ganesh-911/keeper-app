@@ -1,4 +1,4 @@
-import React ,{useState}from "react";
+import React ,{useState,useEffect}from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 import Note from "./Note";
@@ -6,14 +6,21 @@ import CreateArea from "./CreateArea";
 import { use } from "react";
 
 function App() {
-  const[notes,setNotes]=useState([]);
+  const[notes,setNotes]=useState(()=>{
+    const savedNotes=localStorage.getItem("notes");
+    return savedNotes ? JSON.parse(savedNotes) : [];
+  });
 
 
   function addNote(note){
     setNotes(prevNotes =>{
       return [...prevNotes,note];
     });
+    
   }
+    useEffect(() =>{
+    localStorage.setItem("notes",JSON.stringify(notes));
+  },[notes]);
   function deleteNote(id){
     setNotes(prevNotes =>{
       return prevNotes.filter((_noteItem,index) =>{
